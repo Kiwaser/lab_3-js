@@ -20,3 +20,15 @@ startForm.addEventListener("submit", (e) => {
 
     localStorage.setItem("nickname", nickname);
 })
+
+const canvas = document.getElementById("game-canvas");
+const ctx = canvas.getContext("2d");
+
+const SHIP_HEIGHT = 80;
+const SHIP_WIDTH = SHIP_HEIGHT * (736 / 1104);
+const SHIP_RADIUS = SHIP_WIDTH * 0.45;
+
+const shipImg = new Image();
+let shipImgReady = false;
+shipImg.onload = () => { shipImgReady = true; };
+shipImg.src = "./img/ship.png";
