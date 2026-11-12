@@ -19,7 +19,7 @@ body {
 }
 
 
-.start-screen label {
+.start-screen form {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -34,4 +34,24 @@ body {
 .start-screen label input {
     background-color: #9988cf;
     color: #18084d;
+}
+
+#start-btn {
+    box-shadow: none;
+    border: none;
+    outline: none;
+    appearance: none;
+    background-color: #943bc4;
+    color: #18084d;
+    border-radius: 5px;
+}
+
+#name-input{
+    box-shadow: none;
+    border: none;
+    outline: none;
+    appearance: none;
+    background-color: #9988cf;
+    color: #18084d;
+    border-radius: 5px;
 }
