@@ -16,25 +16,40 @@
     <h1 class="game-name">StarTreck</h1>
     <form id="start-form">
         <input id="name-input" type="text" placeholder="Введите своё имя" maxlength="20">
-        <button id="start-btn" type="submit" disabled>Начать</button>
+        <button id="start-btn" type="submit" disabled>Начать игру</button>
     </form>
 </div>
 
 <div id="game-screen" class="game-screen">
     <div class="hud">
         <div id="hud-timer">02:00</div>
+        <button id="pause-btn" type="button">Пауза</button>
         <div id="hud-score">Баллы: 0</div>
         <div id="hud-lives">Жизни: 3</div>
         <div id="hud-name">Игрок</div>
     </div>
-    <canvas id="game-canvas" width="800" height="600"></canvas>
+    <div class="canvas-wrap">
+        <canvas id="game-canvas" width="800" height="600"></canvas>
+        <div id="pause-overlay" class="pause-overlay">
+            <span>Пауза</span>
+        </div>
+    </div>
 </div>
 
 <div id="game-over-screen" class="game-over-screen">
-    <H1>Game Over</H1>
-    <table>
-<!--        Таблица-->
+    <h1>Game Over</h1>
+    <p id="player-result"></p>
+    <table id="results-table">
+        <thead>
+        <tr>
+            <th>#</th>
+            <th>Игрок</th>
+            <th>Баллы</th>
+        </tr>
+        </thead>
+        <tbody id="results-body"></tbody>
     </table>
+    <button id="restart-btn" type="button">Играть снова</button>
 </div>
 </body>
 </html>
