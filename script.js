@@ -33,6 +33,11 @@ let shipImgReady = false;
 shipImg.onload = () => { shipImgReady = true; };
 shipImg.src = "./img/ship.png";
 
+const meteorImg = new Image();
+let meteorImgReady = false;
+meteorImg.onload = () => { meteorImgReady = true; };
+meteorImg.src = "./img/meteor.png";
+
 const ship = {
     x: canvas.width / 2,
     y: canvas.height - SHIP_HEIGHT / 2 - 20,
@@ -46,6 +51,13 @@ const keys = {
 };
 
 const SHIP_SPEED = 3;
+
+const METEOR_SIZE = 50;
+const METEOR_SPEED_MIN = 1.5;
+const METEOR_SPEED_MAX = 4;
+const SPAWN_INTERVAL_MS = 700;
+const meteors = [];
+let lastSpawnTime = 0;
 
 window.addEventListener("keydown", (e) => {
     if (e.code in keys) {
@@ -79,11 +91,32 @@ function updateShip() {
     ship.y = Math.max(halfH, Math.min(canvas.height - halfH, ship.y));
 }
 
+function spawnMeteor() {
+    const x = METEOR_SIZE / 2 + Math.random() * (canvas.width - METEOR_SIZE);
+    meteors.push({
+        x,
+        y: -METEOR_SIZE / 2,
+        speed: METEOR_SPEED_MIN + Math.random() * (METEOR_SPEED_MAX - METEOR_SPEED_MIN),
+        size: METEOR_SIZE,
+    });
+}
+
+function updateMeteors(dt, now) {
+    if (now - lastSpawnTime >= SPAWN_INTERVAL_MS) {
+        spawnMeteor();
+        lastSpawnTime = now;
+    }
+
+    for (let i = meteors.length - 1; i >= 0; i--) {
+        const m = meteors[i];
+        m.y += m.speed * dt;
+        if (m.y - m.size / 2 > canvas.height) {
+            meteors.splice(i, 1);
+        }
+    }
+}
+
 function drawShip() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    updateShip();
-
     if (shipImgReady) {
         ctx.save();
         ctx.translate(ship.x, ship.y);
@@ -96,8 +129,43 @@ function drawShip() {
         );
         ctx.restore();
     }
-
-    requestAnimationFrame(drawShip);
 }
 
-drawShip();
+function drawMeteors() {
+    if (!meteorImgReady) return;
+    for (const m of meteors) {
+        ctx.save();
+        ctx.translate(m.x, m.y);
+        ctx.drawImage(
+            meteorImg,
+            -m.size / 2,
+            -m.size / 2,
+            m.size,
+            m.size
+        );
+        ctx.restore();
+    }
+}
+
+let lastTime = performance.now();
+
+function gameLoop(now) {
+    const dt = Math.min((now - lastTime) / 16.6667, 3);
+    lastTime = now;
+
+    updateShip();
+    updateMeteors(dt, now);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    drawMeteors();
+    drawShip();
+
+    requestAnimationFrame(gameLoop);
+}
+
+requestAnimationFrame((t) => {
+    lastTime = t;
+    lastSpawnTime = t;
+    requestAnimationFrame(gameLoop);
+});
